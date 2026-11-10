@@ -1,0 +1,9 @@
+node_modules
+dist
+server/generated
+package-lock.json
+playwright-report
+test-results
+.agents
+openspec
+AGENTS.md
