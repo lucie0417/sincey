@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../server/generated/prisma"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model AnonymousSpace {
+  id        String   @id @default(uuid()) @db.Uuid
+  tokenHash String   @unique
+  createdAt DateTime @default(now())
+  events    Event[]
+}
+
+model Event {
+  id         String         @id @db.Uuid
+  spaceId    String         @db.Uuid
+  space      AnonymousSpace @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  title      String         @db.VarChar(200)
+  lastDoneOn DateTime?      @db.Date
+  note       String         @default("") @db.VarChar(10000)
+  revision   Int            @default(1)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@index([spaceId, lastDoneOn])
+}
