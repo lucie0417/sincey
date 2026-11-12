@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type FormEvent,
@@ -32,6 +33,7 @@ const Context = createContext<Store>(null!);
 const message = (error: unknown) => (error instanceof Error ? error.message : '操作失敗，請重試');
 
 export function App() {
+  const [colorMode, setColorMode] = useState<'light' | 'dark'>('light');
   const [events, setEvents] = useState<EventRecord[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [error, setError] = useState('');
@@ -39,6 +41,21 @@ export function App() {
   const [undo, setUndo] = useState<Undo | null>(null);
   const [toast, setToast] = useState('');
   const [undoBusy, setUndoBusy] = useState(false);
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const previousMode = root.getAttribute('data-color-mode');
+    const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    const previousThemeColor = themeColor?.content;
+    root.dataset.colorMode = colorMode;
+    if (themeColor) {
+      themeColor.content = getComputedStyle(root).getPropertyValue('--color-page').trim();
+    }
+    return () => {
+      if (previousMode === null) root.removeAttribute('data-color-mode');
+      else root.setAttribute('data-color-mode', previousMode);
+      if (themeColor && previousThemeColor !== undefined) themeColor.content = previousThemeColor;
+    };
+  }, [colorMode]);
   const reload = useCallback(async () => {
     setEvents(await listEvents());
   }, []);
@@ -104,9 +121,18 @@ export function App() {
           <Link to="/" className="brand" aria-label="Sincey 首頁">
             <span className="brand-mark">s.</span>sincey<span className="brand-dot">°</span>
           </Link>
-          <Link to="/backup" className="quiet-link">
-            備份與還原 <span aria-hidden="true">↗</span>
-          </Link>
+          <div className="header-actions">
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={() => setColorMode((mode) => (mode === 'light' ? 'dark' : 'light'))}
+            >
+              {colorMode === 'light' ? '切換為深色' : '切換為淺色'}
+            </button>
+            <Link to="/backup" className="quiet-link">
+              備份與還原 <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
         </header>
         <main>
           {status === 'loading' ? (
