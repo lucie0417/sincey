@@ -25,6 +25,7 @@ npm run dev
 - 列表由最近日期新到舊排列，同日依標題排序，未知日期在最後；可搜尋部分標題。
 - 「今天做囉」只更新日期、保留備註，成功後 5 秒內可復原；沒有歷史紀錄。
 - 點事件標題編輯完整內容；刪除需要再次確認。
+- 頁首的「切換為深色／切換為淺色」可調整全站配色，換頁會維持目前模式。每次重新整理或另開網站分頁皆回到淺色，不保存偏好，也不跟隨系統外觀。
 - 不做提醒、逾期警告、打卡評分或自動跨裝置同步。
 
 ## 資料與隱私
@@ -50,4 +51,4 @@ npm run build
 
 `createdb` 只需執行一次，已存在會回報錯誤。測試自動建置並啟動正式模式網站於 localhost:5174；測試資料庫可用環境變數 `TEST_DATABASE_URL` 覆寫。瀏覽器測試模擬手機尺寸，不代表已完成實體手機與公開 HTTPS 部署驗收。
 
-詳細文件：[API](docs/api.md)、[備份](docs/backup.md)、[部署與回退](docs/deployment.md)、[本機驗收紀錄](docs/verification.md)。
+詳細文件：[API](docs/api.md)、[備份](docs/backup.md)、[部署與回退](docs/deployment.md)、[本機驗收紀錄](docs/verification.md)、[明暗模式驗收](docs/color-mode-verification.md)。
